@@ -5,11 +5,19 @@ import { ThemeProvider } from '@material-ui/styles'
 import './layout.scss'
 
 export default class Header extends React.Component {
-  state = {
-    tabs: ['','']
-  }
+// state = {
+//    tabs: []
+// }
 
   render () {
-    return ()
+    return (
+      <ThemeProvider theme={Theme}>
+        <AppBar position='static' className='header'>
+          <Toolbar color='primary.main'>
+            <Typography variant='h6'> Punto de Venta PV </Typography>
+          </Toolbar>
+        </AppBar>
+      </ThemeProvider>
+    )
   }
 }

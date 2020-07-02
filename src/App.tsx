@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import './App.scss'
+import Layout from './layout/layout'
 
 const routes = [
   { path: '/compraVenta/compras' },
@@ -14,7 +15,7 @@ const routes = [
 const routeComponents = routes.map(({ path }, key) => <Route exact path={path} key={key} />)
 const App = () => (
   <Router>
-    <Layout/>
+    <Layout />
     <Switch>
       <Redirect to='/home' />
       {routeComponents}

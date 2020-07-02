@@ -1,0 +1,40 @@
+.drawer {
+    border-right: 1px solid #CCC;
+    height: 90.5vh;
+    width: 300px;
+    color: #00695f;
+    transition: all .2s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    .menuOpen {
+        transform: rotate(90deg);
+        transition: all .2s;
+    }
+    #nested-list-subheader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all .2s;
+        padding: 0 0 0 1rem;
+        .btn {
+            width: 25px;
+            padding: 0 1.75rem 0 0;
+        }
+        .rotate {
+            transition: all .2s;
+            transform: rotate(180deg);
+        }
+    }
+    .MuiListItem-root {
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+}
+
+.minimized {
+    width: 20px;
+    overflow-y: hidden;
+    #nested-list-subheader {
+        padding: 0;
+    }
+}
