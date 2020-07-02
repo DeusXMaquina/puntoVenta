@@ -2,13 +2,17 @@
     border-right: 1px solid #CCC;
     height: 90.5vh;
     width: 300px;
-    color: #00695f;
+    color: #1A7EE5;
     transition: all .2s;
     overflow-x: hidden;
     overflow-y: auto;
     .menuOpen {
         transform: rotate(90deg);
         transition: all .2s;
+    }
+    .menuClose {
+      transform: rotate(0deg);
+      transition: all .2s;
     }
     #nested-list-subheader {
         display: flex;

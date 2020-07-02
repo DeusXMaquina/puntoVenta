@@ -35,7 +35,7 @@ const Drawer = (props:any) => {
       return (
         <div key={item.id}>
           <ListItem button onClick={() => toggleItem(item.id)}>
-            <ChevronRightIcon className={props.itemArray[item.id] ? 'menuOpen' : '' } />
+          <ChevronRightIcon className={props.itemArray[item.id] ? 'menuOpen' : 'menuClose' } />
             <ListItemText primary={item.name} />
           </ListItem>
           <Collapse in={props.itemArray[item.id]} timeout='auto' unmountOnExit style={{ paddingLeft: '2rem' }}>
