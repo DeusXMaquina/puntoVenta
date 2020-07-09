@@ -1,6 +1,6 @@
 const initialState: any = {
   path: '',
-  name: 'Please select a queue that you wish to modify'
+  name: 'Por favor selecciona la lista que deseas ver'
 }
 
 const setQueueState = (state = initialState, action: any) => {
