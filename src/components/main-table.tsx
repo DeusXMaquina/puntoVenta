@@ -19,9 +19,9 @@ type Props = {
 const Table = (props:Props) => {
   const [state, setState] = React.useState({
     columns: [
-      {title: 'ID', name: 'id'},
-      {title: 'Nombre', name: 'Nombre'},
-      {title: 'Precio de Venta', name: 'precioVenta'}
+      {title: 'ID', field: 'id'},
+      {title: 'Nombre', field: 'nombre'},
+      {title: 'Precio de Venta', field: 'precioVenta'}
     ],
     rows: props.tableData
  })
@@ -29,8 +29,8 @@ const Table = (props:Props) => {
   const [apiData, setApiData] = useState([])
 
   const fetchData = async () => {
-    const apiCall = await fetch('http://127.0.0.1:5000/',
-      {method:'GET', headers:{'lista': props.queue.path}})
+    const apiCall = await fetch(`http://127.0.0.1:5000/`,
+      {method:'GET', headers:{'listas': props.queue.name}})
     const apiCallData = await apiCall.json()
     const renderedApiCallData = await apiCallData.map((data: TableRowProducts[]) => {
       return {
@@ -44,16 +44,7 @@ const Table = (props:Props) => {
     await setApiData(renderedApiCallData)
   }
 
-  useEffect(() => { fetchData()}, [props.queue.path])
-
-  console.log(state)
-  console.log(props)
-
-  const listaProductos = [
-    {id: 1, nombre: 'jose', precioVenta: 15.00},
-    {id: 1, nombre: 'jose', precioVenta: 15.00},
-    {id: 1, nombre: 'jose', precioVenta: 15.00}
-  ]
+  useEffect(() => { fetchData()}, [props.queue.name])
 
   return props.queue.path ? (
     <MaterialTable
@@ -63,9 +54,39 @@ const Table = (props:Props) => {
       columns={state.columns}
       data={props.tableData}
       editable={{
-        onRowAdd: (newData) =>
+        onRowAdd: newData =>
+          new Promise((resolve, reject) => {
+            setTimeout(() =>{
+              console.log('esto es new data: ', JSON.stringify(newData))
+              const requestOptions = {method: 'POST', headers: {'Content-Type': 'application/json' }, body: JSON.stringify(newData)}
+              fetch('http://127.0.0.1:5000/', requestOptions)
+              .then(response => response.json())
+              .then(data => fetchData())
+              resolve()}, 600)
+          }),
+        onRowUpdate: (newData, oldData) =>
           new Promise((resolve) => {
-            setTimeout(() =>{resolve()}, 600)
+            setTimeout(() => {
+              resolve();
+              if (oldData) {
+                setState((prevState: any) => {
+                  const data = [...prevState.data];
+                  data[data.indexOf(oldData)] = newData;
+                  return { ...prevState, data };
+                });
+              }
+            }, 600);
+          }),
+        onRowDelete: (oldData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              setState((prevState: any) => {
+                const data = [...prevState.data];
+                data.splice(data.indexOf(oldData), 1);
+                return { ...prevState, data };
+              });
+            }, 600);
           })}} />
   ) : (
     <Paper

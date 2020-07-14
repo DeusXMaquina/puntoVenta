@@ -1,7 +1,9 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import './App.scss'
 import Layout from './layout/layout'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+// import Table from './components/table'
+import { connect } from 'react-redux'
 
 const routes = [
   { path: '/compraVenta/compras' },
@@ -23,4 +25,4 @@ const App = () => (
   </Router>
 )
 
-export default App
+export default connect()(App)

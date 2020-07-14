@@ -18,12 +18,25 @@ class Database:
     conn = mysql.connect()
     self.cursor = conn.cursor()
     parser = reqparse.RequestParser()
-    parser.add_argument('productos', required=True, location='headers')
-    self.env = request.headers.get('productos')
+    parser.add_argument('listas', required=True, location='headers')
+    self.env = request.headers.get('listas')
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST', 'UPDATE', 'DELETE'])
 @cross_origin()
 def get_queues():
-  db = Database()
-  db.cursor.execute('SELECT * FROM productos', (db.env))
-  return jsonify(db.cursor.fetchall())
+  
+  if request.method == 'GET':
+    db = Database()
+    db.cursor.execute('SELECT * FROM ' + db.env)
+    return jsonify(db.cursor.fetchall())
+
+  if request.method == 'POST':
+    data = request.get_json()
+    db = Database()
+    db.cursor.execute("INSERT INTO productos (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
+
+@app.route('/p/<string:cadena>')
+def show_cadena(cadena):
+  return 'Esta es la cadena {}'.format(cadena)

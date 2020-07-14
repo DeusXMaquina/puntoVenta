@@ -11,7 +11,8 @@
 // }
 
 export interface TableRowProducts {
-  id: number;
+  id: number,
   nombre: string,
-  precioVenta: number
+  precioVenta: number,
+  editable?: string
 }

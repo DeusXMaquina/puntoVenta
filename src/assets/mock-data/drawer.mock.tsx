@@ -4,19 +4,19 @@ const MenuTree: DropdownMenu[] = [{
     id: 'Listas',
     name: 'Listas e Inventarios',
     children: [{
-      id: 'ListaProductos',
+      id: 'productos',
       name: 'Productos',
       path: '/listas/productos'
     }, {
-      id: 'ListaClientes',
+      id: 'clientes',
       name: 'Clientes',
       path: '/listas/clientes'
     }, {
-      id:'ListaProveedores',
+      id:'proveedores',
       name: 'Proveedores',
       path: '/listas/proveedores'
     }, {
-      id: 'ListaInvetario',
+      id: 'inventario',
       name: 'Inventario',
       path: '/listas/inventario'
     }]
@@ -24,11 +24,11 @@ const MenuTree: DropdownMenu[] = [{
     id: 'Compra/Venta',
     name: 'Compra/Venta',
     children: [{
-      id: 'Compras',
+      id: 'compras',
       name: 'Compras',
       path: '/compraVenta/compras'
     }, {
-      id: 'Ventas',
+      id: 'ventas',
       name: 'Ventas',
       path: '/CompraVenta/ventas'
     }]
