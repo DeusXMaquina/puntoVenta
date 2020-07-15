@@ -3,7 +3,7 @@ import MaterialTable from 'material-table'
 import store from '../index'
 import { connect } from 'react-redux'
 import { toggleMenu, setQueue, setTableData } from '../store/actions'
-import { TableRowProducts } from '../assets/models/table-row.interface'
+import { TableRow } from '../assets/models/table-row.interface'
 import { Paper } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
@@ -12,8 +12,8 @@ type Props = {
     path: string,
     name: string
   }
-  tableData: TableRowProducts[],
-  setTableData: (mappedData: TableRowProducts[]) => TableRowProducts[]
+  tableData: TableRow[],
+  setTableData: (mappedData: TableRow[]) => TableRow[]
 }
 
 const Table = (props:Props) => {
@@ -21,27 +21,44 @@ const Table = (props:Props) => {
     columns: [
       {title: 'ID', field: 'id'},
       {title: 'Nombre', field: 'nombre'},
-      {title: 'Precio de Venta', field: 'precioVenta'}
+      {title: 'Precio de Venta', field: 'precioVenta'},
+    ],
+    columns2: [
+      {title: 'ID', field: 'id'},
+      {title: 'Nombre', field: 'nombre'},
+      {title: 'Telefono', field: 'precioVenta'},
+      {title: 'Correo Electronico', field: 'correoElectronico'}
     ],
     rows: props.tableData
  })
 
   const [apiData, setApiData] = useState([])
 
+  const [tableInfo, setTableInfo] = useState(true)
+
   const fetchData = async () => {
+    if (props.queue.name === 'Clientes' && tableInfo)
+      setTableInfo(!tableInfo)
+    else if (props.queue.name === 'Proveedores' && tableInfo)
+      setTableInfo(!tableInfo)
+    else if (props.queue.name === 'Productos' && !tableInfo)
+      setTableInfo(!tableInfo)
+    else if (props.queue.name === 'Inventario' && !tableInfo)
+      setTableInfo(!tableInfo)
     const apiCall = await fetch(`http://127.0.0.1:5000/`,
       {method:'GET', headers:{'listas': props.queue.name}})
     const apiCallData = await apiCall.json()
-    const renderedApiCallData = await apiCallData.map((data: TableRowProducts[]) => {
-      return {
-        id: data[0],
-        nombre: data[1],
-        precioVenta: data[2]
-      }
-    },
-    (err:any) => console.log(err))
-    props.setTableData(renderedApiCallData)
-    await setApiData(renderedApiCallData)
+      const renderedApiCallData = await apiCallData.map((data: TableRow[]) => {
+        return {
+          id: data[0],
+          nombre: data[1],
+          precioVenta: data[2],
+          correoElectronico: data[3] ? data[3] : ''
+        }
+      },
+      (err:any) => console.log(err))
+      props.setTableData(renderedApiCallData)
+      await setApiData(renderedApiCallData)
   }
 
   useEffect(() => { fetchData()}, [props.queue.name])
@@ -51,15 +68,14 @@ const Table = (props:Props) => {
       style={{position: 'static'}}
       options={{pageSize: props.tableData.length || 50, pageSizeOptions: [7,25,50,100]}}
       title={props.queue.name}
-      columns={state.columns}
+      columns={tableInfo ? state.columns : state.columns2}
       data={props.tableData}
       editable={{
         onRowAdd: newData =>
           new Promise((resolve, reject) => {
             setTimeout(() =>{
-              console.log('esto es new data: ', JSON.stringify(newData))
-              const requestOptions = {method: 'POST', headers: {'Content-Type': 'application/json' }, body: JSON.stringify(newData)}
-              fetch('http://127.0.0.1:5000/', requestOptions)
+              const requestOptions = {method: 'POST', headers: {'Content-Type': 'application/json', 'listas': props.queue.name }, body: JSON.stringify(newData)}
+              fetch(`http://127.0.0.1:5000/${props.queue.name.toLowerCase()}`, requestOptions)
               .then(response => response.json())
               .then(data => fetchData())
               resolve()}, 600)
@@ -105,7 +121,7 @@ const mapState = () => ({
 const mapDispatch = {
   toggleMenu: (itemArray:{}) => toggleMenu(itemArray),
   setQueue: (itemName: {path:string, name: string}) => setQueue(itemName),
-  setTableData: (mappedData: TableRowProducts[]) => setTableData(mappedData)
+  setTableData: (mappedData: TableRow[]) => setTableData(mappedData)
 }
 
 export default connect<any, any, any>(mapState, mapDispatch)(Table)

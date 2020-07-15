@@ -21,22 +21,47 @@ class Database:
     parser.add_argument('listas', required=True, location='headers')
     self.env = request.headers.get('listas')
 
-@app.route('/', methods=['GET', 'POST', 'UPDATE', 'DELETE'])
+#GET para todas las tablas
+@app.route('/', methods=['GET'])
 @cross_origin()
 def get_queues():
-  
-  if request.method == 'GET':
-    db = Database()
-    db.cursor.execute('SELECT * FROM ' + db.env)
-    return jsonify(db.cursor.fetchall())
+  db = Database()
+  db.cursor.execute('SELECT * FROM %s' %(db.env))
+  return jsonify(db.cursor.fetchall())
 
-  if request.method == 'POST':
+  #if request.method == 'POST':
+    #data = request.get_json()
+    #db = Database()
+    #db.cursor.execute("INSERT INTO productos (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta')))
+    #db.cursor.connection.commit()
+    #return jsonify(db.cursor.fetchall())
+
+@app.route('/<string:tableName>', methods=['POST'])
+@cross_origin()
+def postDB(tableName):
+  #POST para tabla PRODUCTOS
+  if tableName == 'productos':
     data = request.get_json()
     db = Database()
     db.cursor.execute("INSERT INTO productos (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
-
-@app.route('/p/<string:cadena>')
-def show_cadena(cadena):
-  return 'Esta es la cadena {}'.format(cadena)
+  # POST para tabla CLIENTES
+  elif tableName == 'clientes':
+    data = request.get_json()
+    db= Database()
+    db.cursor.execute("INSERT INTO clientes (nombre, telefono, correoElectronico) VALUES ('%s', '%s', '%s')" %(data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
+  elif tableName == 'proveedores':
+    data = request.get_json()
+    cadena = "INSERT INTO proveedores (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta'))
+    print(cadena)
+    return cadena
+  elif tableName == 'inventario':
+    data = request.get_json()
+    cadena = "INSERT INTO inventario (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta'))
+    print(cadena)
+    return cadena
+  else :
+    return 'Esta es la cadena {}'.format(tableName)

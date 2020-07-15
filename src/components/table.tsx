@@ -3,7 +3,7 @@ import MaterialTable from 'material-table';
 import store from '../index'
 import { connect } from "react-redux";
 import { toggleMenu, setQueue, setTableData } from "../store/actions";
-import { TableRowProducts } from "../assets/models/table-row.interface";
+import { TableRow } from "../assets/models/table-row.interface";
 import { Paper } from "@material-ui/core";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -12,8 +12,8 @@ type Props = {
     path: string,
     name: string,
   }
-  tableData: TableRowProducts[],
-  setTableData: (mappedData: TableRowProducts[]) => TableRowProducts[]
+  tableData: TableRow[],
+  setTableData: (mappedData: TableRow[]) => TableRow[]
 }
 
 const Table = (props: Props) => {
@@ -32,7 +32,7 @@ const Table = (props: Props) => {
     const apiCall = await fetch('http://127.0.0.1:5000/', 
       { method: 'GET', headers: { 'environmentId' : props.queue.path }})
     const apiCallData = await apiCall.json()
-    const renderedApiCallData = await apiCallData.map((data: TableRowProducts[]) => {
+    const renderedApiCallData = await apiCallData.map((data: TableRow[]) => {
       return {
         id: data[0],
         nombre: data[1],
@@ -118,7 +118,7 @@ const mapState = () => ({
 const mapDispatch = {
   toggleMenu: (itemArray: {}) => toggleMenu(itemArray),
   setQueue: (itemName: { path: string, name: string }) => setQueue(itemName),
-  setTableData: (mappedData: TableRowProducts[]) => setTableData(mappedData)
+  setTableData: (mappedData: TableRow[]) => setTableData(mappedData)
 }
 
 export default connect<any, any, any>(mapState, mapDispatch)(Table)

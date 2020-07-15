@@ -10,9 +10,23 @@
 //     chatButtonInfo: string;
 // }
 
-export interface TableRowProducts {
+export interface TableRow {
   id: number,
   nombre: string,
-  precioVenta: number,
-  editable?: string
+  precioVenta?: number,
+  telefono?: string,
+  correoElectronico?:string
+}
+
+export interface TableRowClients {
+  id: number,
+  nombre: string,
+  telefono: string,
+  correoElectronico: string
+}
+
+export interface TableRowInventory {
+  id: number,
+  nombre: string,
+  cantidad: number
 }
