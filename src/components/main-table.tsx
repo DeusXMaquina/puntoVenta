@@ -78,7 +78,7 @@ const Table = (props:Props) => {
               fetch(`http://127.0.0.1:5000/${props.queue.name.toLowerCase()}`, requestOptions)
               .then(response => response.json())
               .then( () => fetchData())
-              resolve()}, 600)
+              resolve()}, 1000)
           }),
         onRowUpdate: (newData, oldData) =>
           new Promise((resolve, reject) => {
@@ -96,7 +96,7 @@ const Table = (props:Props) => {
                 .then( () => fetchData())
                 resolve()
               }
-            }, 600);
+            }, 1000);
           }),
         onRowDelete: (oldData) =>
           new Promise((resolve) => {
@@ -106,7 +106,7 @@ const Table = (props:Props) => {
               .then(response => response.json())
               .then( () => fetchData())
               resolve()
-            }, 600);
+            }, 1000);
           })}} />
   ) : (
     <Paper
