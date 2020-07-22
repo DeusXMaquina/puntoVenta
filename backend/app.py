@@ -49,19 +49,39 @@ def postDB(tableName):
   # POST para tabla CLIENTES
   elif tableName == 'clientes':
     data = request.get_json()
-    db= Database()
+    db = Database()
     db.cursor.execute("INSERT INTO clientes (nombre, telefono, correoElectronico) VALUES ('%s', '%s', '%s')" %(data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
   elif tableName == 'proveedores':
     data = request.get_json()
-    cadena = "INSERT INTO proveedores (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta'))
-    print(cadena)
-    return cadena
+    db = Database()
+    db.cursor.execute("INSERT INTO proveedores (nombre, telefono, correoElectronico) VALUES ('%s', '%s', '%s')" %(data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
   elif tableName == 'inventario':
     data = request.get_json()
-    cadena = "INSERT INTO inventario (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta'))
-    print(cadena)
-    return cadena
+    db = Database()
+    db.cursor.execute("INSERT INTO inventario (idProducto, cantidad) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
   else :
     return 'Esta es la cadena {}'.format(tableName)
+
+@app.route('/patch', methods=['PATCH'])
+@cross_origin()
+def updateDB():
+  data = request.get_json()
+  db = Database()
+  db.cursor.execute("UPDATE %s SET nombre = '%s', precioVenta = '%s' WHERE id= %s" %(db.env, data.get('nombre'), data.get('precioVenta'), data.get('id')))
+  db.cursor.connection.commit()
+  return jsonify(db.cursor.fetchall())
+
+@app.route('/delete', methods=['DELETE'])
+@cross_origin()
+def deleteDB():
+  data = request.get_json()
+  db = Database()
+  db.cursor.execute("DELETE FROM %s WHERE id= %s" %(db.env, data.get('id')))
+  db.cursor.connection.commit()
+  return jsonify(db.cursor.fetchall())

@@ -77,31 +77,35 @@ const Table = (props:Props) => {
               const requestOptions = {method: 'POST', headers: {'Content-Type': 'application/json', 'listas': props.queue.name }, body: JSON.stringify(newData)}
               fetch(`http://127.0.0.1:5000/${props.queue.name.toLowerCase()}`, requestOptions)
               .then(response => response.json())
-              .then(data => fetchData())
+              .then( () => fetchData())
               resolve()}, 600)
           }),
         onRowUpdate: (newData, oldData) =>
-          new Promise((resolve) => {
+          new Promise((resolve, reject) => {
             setTimeout(() => {
-              resolve();
               if (oldData) {
-                setState((prevState: any) => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
+                var updateData = {
+                  id: oldData.id,
+                  nombre: oldData.nombre === newData.nombre ? oldData.nombre : newData.nombre,
+                  precioVenta: oldData.precioVenta == newData.precioVenta ? oldData.precioVenta : newData.precioVenta ,
+                  correoElectronico: oldData.correoElectronico === newData.correoElectronico ? oldData.correoElectronico : newData.correoElectronico
+                }
+                const updateOptions = {method: 'PATCH', headers: {'Content-Type': 'application/json', 'listas': props.queue.name }, body: JSON.stringify(updateData)} 
+                fetch('http://127.0.0.1:5000/patch', updateOptions)
+                .then(response => response.json())
+                .then( () => fetchData())
+                resolve()
               }
             }, 600);
           }),
         onRowDelete: (oldData) =>
           new Promise((resolve) => {
             setTimeout(() => {
-              resolve();
-              setState((prevState: any) => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
-              });
+              const deleteOptions = {method: 'DELETE', headers: {'Content-Type': 'application/json', 'listas': props.queue.name }, body: JSON.stringify(oldData)}
+              fetch('http://127.0.0.1:5000/delete', deleteOptions)
+              .then(response => response.json())
+              .then( () => fetchData())
+              resolve()
             }, 600);
           })}} />
   ) : (
