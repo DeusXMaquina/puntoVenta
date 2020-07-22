@@ -19,7 +19,7 @@ type Props = {
 const Table = (props:Props) => {
   const [state, setState] = React.useState({
     columns: [
-      {title: 'ID', field: 'id'},
+      {title: 'ID', field: 'id', editable: 'never'},
       {title: 'Nombre', field: 'nombre'},
       {title: 'Precio de Venta', field: 'precioVenta'},
     ],
@@ -28,6 +28,9 @@ const Table = (props:Props) => {
       {title: 'Nombre', field: 'nombre'},
       {title: 'Telefono', field: 'precioVenta'},
       {title: 'Correo Electronico', field: 'correoElectronico'}
+    ],
+    columns3: [
+      {title: 'ID', field: 'id'}
     ],
     rows: props.tableData
  })
