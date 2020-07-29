@@ -20,7 +20,7 @@ const MenuTree: DropdownMenu[] = [{
       name: 'Inventario',
       path: '/listas/inventario'
     }]
-  }, {
+  }/* , {
     id: 'Compra/Venta',
     name: 'Compra/Venta',
     children: [{
@@ -32,6 +32,6 @@ const MenuTree: DropdownMenu[] = [{
       name: 'Ventas',
       path: '/CompraVenta/ventas'
     }]
-  }]
+  } */]
 
 export default MenuTree

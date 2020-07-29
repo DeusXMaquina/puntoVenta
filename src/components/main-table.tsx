@@ -21,7 +21,7 @@ const Table = (props:Props) => {
     columns: [
       {title: 'ID', field: 'id', editable: 'never'},
       {title: 'Nombre', field: 'nombre'},
-      {title: 'Precio de Venta', field: 'precioVenta'},
+      {title: 'Precio', field: 'precioVenta'},
     ],
     columns2: [
       {title: 'ID', field: 'id'},
@@ -30,7 +30,9 @@ const Table = (props:Props) => {
       {title: 'Correo Electronico', field: 'correoElectronico'}
     ],
     columns3: [
-      {title: 'ID', field: 'id'}
+      {title: 'ID', field: 'id', editable: 'never'},
+      {title: 'Nombre', field: 'nombre', editable: 'never'},
+      {title: 'Cantidad', field: 'precioVenta'}
     ],
     rows: props.tableData
  })
@@ -49,7 +51,7 @@ const Table = (props:Props) => {
     else if (props.queue.name === 'Inventario' && !tableInfo)
       setTableInfo(!tableInfo)
     const apiCall = await fetch(`http://127.0.0.1:5000/`,
-      {method:'GET', headers:{'listas': props.queue.name}})
+      {method:'GET', headers:{'listas': props.queue.name !== 'Inventario' ? props.queue.name : 'vistaInventario'}})
     const apiCallData = await apiCall.json()
       const renderedApiCallData = await apiCallData.map((data: TableRow[]) => {
         return {
@@ -71,13 +73,13 @@ const Table = (props:Props) => {
       style={{position: 'static'}}
       options={{pageSize: props.tableData.length || 50, pageSizeOptions: [7,25,50,100]}}
       title={props.queue.name}
-      columns={tableInfo ? state.columns : state.columns2}
+      columns = {!tableInfo ? state.columns2 : props.queue.name === 'Inventario' ? state.columns3 : state.columns }
       data={props.tableData}
       editable={{
         onRowAdd: newData =>
           new Promise((resolve, reject) => {
             setTimeout(() =>{
-              const requestOptions = {method: 'POST', headers: {'Content-Type': 'application/json', 'listas': props.queue.name }, body: JSON.stringify(newData)}
+              const requestOptions = {method: 'POST', headers: {'Content-Type': 'application/json', 'listas': props.queue.name}, body: JSON.stringify(newData)}
               fetch(`http://127.0.0.1:5000/${props.queue.name.toLowerCase()}`, requestOptions)
               .then(response => response.json())
               .then( () => fetchData())
