@@ -96,7 +96,7 @@ const Table = (props:Props) => {
                   correoElectronico: oldData.correoElectronico === newData.correoElectronico ? oldData.correoElectronico : newData.correoElectronico
                 }
                 const updateOptions = {method: 'PATCH', headers: {'Content-Type': 'application/json', 'listas': props.queue.name }, body: JSON.stringify(updateData)} 
-                fetch('http://127.0.0.1:5000/patch', updateOptions)
+                fetch(`http://127.0.0.1:5000/patch/${props.queue.name.toLowerCase()}`, updateOptions)
                 .then(response => response.json())
                 .then( () => fetchData())
                 resolve()

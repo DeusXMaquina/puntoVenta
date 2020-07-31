@@ -68,14 +68,33 @@ def postDB(tableName):
   else :
     return 'Esta es la cadena {}'.format(tableName)
 
-@app.route('/patch', methods=['PATCH'])
+@app.route('/patch/<string:tableName>', methods=['PATCH'])
 @cross_origin()
-def updateDB():
-  data = request.get_json()
-  db = Database()
-  db.cursor.execute("UPDATE %s SET nombre = '%s', precioVenta = '%s' WHERE id= %s" %(db.env, data.get('nombre'), data.get('precioVenta'), data.get('id')))
-  db.cursor.connection.commit()
-  return jsonify(db.cursor.fetchall())
+def updateDB(tableName):
+  if tableName == 'productos':
+    data = request.get_json()
+    db = Database()
+    db.cursor.execute("UPDATE %s SET nombre = '%s', precioVenta = '%s' WHERE id= %s" %(db.env, data.get('nombre'), data.get('precioVenta'), data.get('id')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
+  elif tableName == 'clientes':
+    data = request.get_json()
+    db = Database()
+    db.cursor.execute("UPDATE %s SET nombre = '%s', telefono = '%s', correoElectronico = '%s' WHERE id= %s" %(db.env, data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico'), data.get('id')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
+  elif tableName == 'proveedores':
+    data = request.get_json()
+    db = Database()
+    db.cursor.execute("UPDATE %s SET nombre = '%s', telefono = '%s', correoElectronico = '%s' WHERE id= %s" %(db.env, data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico'), data.get('id')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
+  elif tableName == 'inventario':
+    data = request.get_json()
+    db = Database()
+    db.cursor.execute("UPDATE %s SET cantidad = %s WHERE id = %s" %(db.env, data.get('precioVenta'), data.get('id')))
+    db.cursor.connection.commit()
+    return jsonify(db.cursor.fetchall())
 
 @app.route('/delete', methods=['DELETE'])
 @cross_origin()
