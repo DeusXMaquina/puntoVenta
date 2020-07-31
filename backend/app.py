@@ -21,7 +21,7 @@ class Database:
     parser.add_argument('listas', required=True, location='headers')
     self.env = request.headers.get('listas')
 
-#GET para todas las tablas
+# GET
 @app.route('/', methods=['GET'])
 @cross_origin()
 def get_queues():
@@ -29,48 +29,47 @@ def get_queues():
   db.cursor.execute('SELECT * FROM %s' %(db.env))
   return jsonify(db.cursor.fetchall())
 
-  #if request.method == 'POST':
-    #data = request.get_json()
-    #db = Database()
-    #db.cursor.execute("INSERT INTO productos (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta')))
-    #db.cursor.connection.commit()
-    #return jsonify(db.cursor.fetchall())
-
+# POST
 @app.route('/<string:tableName>', methods=['POST'])
 @cross_origin()
 def postDB(tableName):
-  #POST para tabla PRODUCTOS
+
   if tableName == 'productos':
     data = request.get_json()
     db = Database()
     db.cursor.execute("INSERT INTO productos (nombre, precioVenta) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
-  # POST para tabla CLIENTES
+
   elif tableName == 'clientes':
     data = request.get_json()
     db = Database()
     db.cursor.execute("INSERT INTO clientes (nombre, telefono, correoElectronico) VALUES ('%s', '%s', '%s')" %(data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
+
   elif tableName == 'proveedores':
     data = request.get_json()
     db = Database()
     db.cursor.execute("INSERT INTO proveedores (nombre, telefono, correoElectronico) VALUES ('%s', '%s', '%s')" %(data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
+
   elif tableName == 'inventario':
     data = request.get_json()
     db = Database()
     db.cursor.execute("INSERT INTO inventario (idProducto, cantidad) VALUES ('%s', '%s')" %(data.get('nombre'), data.get('precioVenta')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
+
   else :
     return 'Esta es la cadena {}'.format(tableName)
 
+# PATCH
 @app.route('/patch/<string:tableName>', methods=['PATCH'])
 @cross_origin()
 def updateDB(tableName):
+
   if tableName == 'productos':
     data = request.get_json()
     db = Database()
@@ -78,24 +77,28 @@ def updateDB(tableName):
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
   elif tableName == 'clientes':
+
     data = request.get_json()
     db = Database()
     db.cursor.execute("UPDATE %s SET nombre = '%s', telefono = '%s', correoElectronico = '%s' WHERE id= %s" %(db.env, data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico'), data.get('id')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
   elif tableName == 'proveedores':
+
     data = request.get_json()
     db = Database()
     db.cursor.execute("UPDATE %s SET nombre = '%s', telefono = '%s', correoElectronico = '%s' WHERE id= %s" %(db.env, data.get('nombre'), data.get('precioVenta'), data.get('correoElectronico'), data.get('id')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
   elif tableName == 'inventario':
+
     data = request.get_json()
     db = Database()
     db.cursor.execute("UPDATE %s SET cantidad = %s WHERE id = %s" %(db.env, data.get('precioVenta'), data.get('id')))
     db.cursor.connection.commit()
     return jsonify(db.cursor.fetchall())
 
+# DELETE
 @app.route('/delete', methods=['DELETE'])
 @cross_origin()
 def deleteDB():
